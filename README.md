@@ -74,7 +74,7 @@ Usage
     # coding: utf-8
     # File: examples/use-inherit.rb
 
-    require 'file-monitor.rb'
+    require 'file-monitor'
 
     class MyFileMonitor < FileMonitor
       def check(events)

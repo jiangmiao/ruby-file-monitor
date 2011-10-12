@@ -1,22 +1,47 @@
 Ruby File Monitor
 =================
 
-    Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed. It's base on [rb-inotify](https://github.com/nex3/rb-inotify), So it only works in inotify supported system such as Linux.
+Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed. It's base on [rb-inotify](https://github.com/nex3/rb-inotify), So it only works in inotify supported system such as Linux.
+
+Requirements
+------------
+
+Ruby >= 1.8.7
+
+Linux Kernel >= 2.6.13
 
 Features
 --------
 
-    Auto watch recursively:
+1. Auto watching recursively:
+
     If make a new directory in the watched directory, the new directory will be watched automatically.
 
-    Enable Ignored Dirs:
+2. Enable Ignored Dirs:
+
     Any directory matched Regexp pattern ignored_dirs will not be watched.
 
-    Enable Ignored Files:
+3. Enable Ignored Files:
+
     Any files matched Regexp pattern ignored_files will not be recorded.
 
-    Events Buffer Mechanism:
+4. Events Buffer Mechanism:
+
     To avoid run the check methods too quickly, for example, when delete 20 files at the same time, if without Events Buffer will run the check methods 20 times. the frequency of file-monitor is 0.2 second
+
+
+Installation
+------------
+Install from source
+    
+    git clone https://github.com/jiangmiao/ruby-file-monitor
+    cd ruby-file-monitor
+    gem build file-monitor.gemspec
+    gem install file-monitor-0.1.0.gem --user-install
+
+Install from gem server
+
+    gem install file-monitor
 
 Usage
 -----
@@ -66,34 +91,35 @@ Usage
 
 If block exists, the check method will be ignored.
 
-
 Examples
 --------
 ### Auto F5
 
-    Auto F5 will auto refresh the webpage in browser when any watched files changed.
-    It's simple but very useful.
+Auto F5 will auto refresh the webpage in browser when any watched files changed. It's simple but very useful.
 
-    Limition:
+f5.rb requires sinatra.
 
-    1. The watched page MUST have </body> tag. f5.rb will insert script  before </body> to refresh the page when physical file changed.
-    2. Only support GET requests.
+#### Limition:
 
-    Example:
+1. The watched page MUST have </body> tag. f5.rb will insert script  before </body> to refresh the page when physical file changed.
 
-    Environment
+2. Only support GET requests.
+
+#### Usage
+
+    Environment:
     the website physical path is /var/www/foo
     the host is www.foo.com
     homepage is www.foo.com/index.html
 
     start watching the directory
-    ruby f5.rb /var/www/foo
+    ruby examples/f5.rb /var/www/foo
 
-    open www.foo.com:4567/index.html you will see the page same as www.foo.com/index.html
+    open www.foo.com:4567/index.html in browser
+    you will see the page same as www.foo.com/index.html
     do some changes on /var/www/foo/index.html then save the file.
     or create or modify any file in /var/www/foo
-    www.foo.com/index.html will auto refreshed.
-
+    www.foo.com/index.html will refresh automatically.
 
 ### examples/use-block.rb
 

@@ -2,6 +2,8 @@
 # coding: utf-8
 # File: examples/use-block.rb
 
+require 'rubygems'
+
 lib_dir = File.join File.dirname(__FILE__), '../lib'
 $:.unshift lib_dir unless $:.include? lib_dir
 

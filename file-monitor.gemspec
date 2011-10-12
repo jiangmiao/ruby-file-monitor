@@ -6,8 +6,11 @@ Gem::Specification.new do |s|
   s.author      = 'JiangMiao'
   s.email       = 'jiangfriend@gmail.com'
   s.homepage    = 'https://github.com/jiangmiao/ruby-file-monitor'
+  s.has_rdoc    = false
   s.rubyforge_project = 'file-monitor'
+  s.required_ruby_version = '>= 1.8.7'
   s.add_dependency('rb-inotify', '>= 0.8.8')
+  s.add_development_dependency('rb-inotify', '>= 0.8.8')
   
   s.files = [
     'lib/file-monitor.rb', 

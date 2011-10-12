@@ -109,10 +109,10 @@ class FileMonitor
   def watch_recursive(dir)
     if watch dir
       # if watch current directory succeeded, then continue watching the sub-directories
-      Dir.glob(File.join(dir, "*/"), File::FNM_DOTMATCH).each do|dir|
-        name = File.basename(dir)
+      Dir.glob(File.join(dir, "*/"), File::FNM_DOTMATCH).each do|subdir|
+        name = File.basename(subdir)
         next if name == ".." or name == "."
-        watch_recursive dir
+        watch_recursive subdir
       end
     end
   end

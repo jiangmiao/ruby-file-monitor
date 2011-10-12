@@ -45,7 +45,7 @@ Install from gem server
 
 Usage
 -----
-### Use block
+### Using block
 
     #!/usr/bin/env ruby
     # coding: utf-8
@@ -68,7 +68,7 @@ Usage
       puts "do something"
     end
 
-### Use inherit
+### Using inherit
 
     #!/usr/bin/env ruby
     # coding: utf-8
@@ -99,7 +99,7 @@ Auto F5 will auto refresh the webpage in browser when any watched files changed.
 
 f5.rb requires sinatra.
 
-#### Limition:
+#### Limitation:
 
     1. The watched page MUST have </body> tag. 
        f5.rb will insert script  before </body> to refresh the page 

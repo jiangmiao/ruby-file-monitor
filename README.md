@@ -101,9 +101,11 @@ f5.rb requires sinatra.
 
 #### Limition:
 
-1. The watched page MUST have </body> tag. f5.rb will insert script  before </body> to refresh the page when physical file changed.
+    1. The watched page MUST have </body> tag. 
+       f5.rb will insert script  before </body> to refresh the page 
+       when physical file changed.
 
-2. Only support GET requests.
+    2. Only support GET requests.
 
 #### Usage
 

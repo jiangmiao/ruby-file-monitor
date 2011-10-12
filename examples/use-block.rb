@@ -12,10 +12,10 @@ require 'file-monitor'
 dir = ARGV[0] || '.'
 m = FileMonitor.new(dir)
 # ignore any dirs end with .git on .svn
-m.ignored_dirs = /\.git|\.svn$/
+m.ignored_dirs = /\.git|\.svn/
 
 # ignore any files end with .swp or ~
-m.ignored_files = /\.swp|~$/
+m.ignored_files = /\.swp|~/
 
 # the block's events contains all file modified infomation in last 0.2 second
 m.run do|events|

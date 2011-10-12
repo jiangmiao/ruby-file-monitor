@@ -101,6 +101,6 @@ end
 require 'sinatra'
 require 'open-uri'
 f5 = AjaxF5.new dir
-f5.ignored_dirs = /\.git|\.svn$/
-f5.ignored_files = /\.sw.*|\~$/
+f5.ignored_dirs = /\.git|\.svn/
+f5.ignored_files = /\.sw.*|\~/
 f5.run

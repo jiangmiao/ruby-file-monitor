@@ -17,11 +17,11 @@ Features
 
     If make a new directory in the watched directory, the new directory will be watched automatically.
 
-2. Enable Ignored Dirs:
+2. Support Ignore Dirs: 
 
     Any directory matched Regexp pattern ignored_dirs will not be watched.
 
-3. Enable Ignored Files:
+3. Support Ignore Files:
 
     Any files matched Regexp pattern ignored_files will not be recorded.
 
@@ -131,7 +131,7 @@ f5.rb requires sinatra.
     ignore ./.git/
     watching ./examples/
 
-Edit README.md by gvim, examples/use-block outputs
+Edit and save README.md by gvim, examples/use-block outputs
 
     +  ./4913
     -  ./4913

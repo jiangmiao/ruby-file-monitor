@@ -1,7 +1,7 @@
 Ruby File Monitor
 =================
 
-Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed. It's base on [rb-inotify](https://github.com/nex3/rb-inotify), So it only works in inotify supported system such as Linux.
+Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed. Use for situation like Auto refresh webpage, Auto execute unit tests, Auto compile CoffeeScript, Haml and so on. It's base on [rb-inotify](https://github.com/nex3/rb-inotify), So it only works in inotify supported system such as Linux.
 
 Requirements
 ------------
@@ -29,6 +29,9 @@ Features
 
     To avoid run the check methods too quickly, for example, when delete 20 files at the same time, if without Events Buffer will run the check methods 20 times. the frequency of file-monitor is 0.2 second
 
+5. High Performance
+
+    For Ruby File Monitor use inotify library, so it's very fast, even watching thousands of directories.
 
 Installation
 ------------

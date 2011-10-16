@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rb-inotify', '>= 0.8.8')
   
   s.files = [
-    'bin/ruby-file-monitor.rb',
     'lib/file-monitor.rb', 
     'examples/use-block.rb', 
     'examples/use-inherit.rb', 

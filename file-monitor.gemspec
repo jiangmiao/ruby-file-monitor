@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = 'file-monitor'
   s.summary     = 'File Monitor Library'
-  s.description = 'Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed.'
-  s.version     = '0.1.1'
+  s.description = 'Ruby File Monitor is a easy way to watch the directories and files, execute commands when them changed.'
+  s.version     = '0.1.3'
   s.author      = 'JiangMiao'
   s.email       = 'jiangfriend@gmail.com'
   s.homepage    = 'https://github.com/jiangmiao/ruby-file-monitor'

@@ -94,7 +94,7 @@ Usage
 
 If block exists, the check method will be ignored.
 
-### Filter mode
+### Using filter mode
 
     #!/usr/bin/env ruby
     # coding: utf-8
@@ -116,6 +116,24 @@ If block exists, the check method will be ignored.
     m.run do|events|
       puts events.size()
       puts "do something"
+    end
+
+### The easiest way
+
+    FileMonitor.watch '.' do
+      dirs {
+        disallow /git|svn/
+      }
+
+      files {
+        disallow /.*/
+        allow /.rb$/
+      }
+
+      exec {|events|
+        puts events.size()
+        puts "do something"
+      }
     end
 
 Examples

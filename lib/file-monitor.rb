@@ -192,4 +192,19 @@ class FileMonitor
       end
     end
   end
+
+  alias_method :dirs, :filter_dirs
+  alias_method :files, :filter_files
+  alias_method :exec, :run
+
+  def self.create(dir = '.', &block)
+    m = FileMonitor.new(dir)
+    m.instance_eval &block
+    m
+  end
+
+  def self.watch(dir = '.', &block)
+    self.create(dir, &block)
+  end
+
 end

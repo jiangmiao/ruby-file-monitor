@@ -3,17 +3,52 @@
 
 require 'rb-inotify'
 
-class FileMonitor
-  # the ignored list
-  @@DISALLOW = 0
-  @@ALLOW = 1
-
-  def ALLOW
-    @@ALLOW
+class FileMonitorFilter
+  def initialize
+    @patterns = []
   end
 
-  def DISALLOW
-    @@DISALLOW
+  def ignored?(path)
+    status = :allow
+    for mode, pattern in @patterns
+      if path =~ pattern
+        status = mode
+      end
+    end
+    return status == :disallow
+  end
+  
+  alias_method :disallow?, :ignored?
+
+  def disallow(pattern)
+    @patterns << [:disallow, pattern]
+  end
+
+  def allow(pattern)
+    @patterns << [:allow, pattern]
+  end
+
+  def reset
+    @patterns = []
+  end
+end
+
+class FileMonitor
+  # do the action every @frequency second, to avoid check too frequently
+  attr_accessor :frequency
+
+  def initialize(project_dir = '.')
+    @notifier    = INotify::Notifier.new
+    @project_dir = project_dir
+
+    @events      = []
+    @ignores     = []
+    @frequency   = 0.2
+
+    @filters = {
+      :files => FileMonitorFilter.new,
+      :dirs => FileMonitorFilter.new 
+    }
   end
 
   # Compatible to old ignored_dirs and ignored_files mode
@@ -26,71 +61,34 @@ class FileMonitor
   end
 
   def ignored_dirs=(pattern)
-    filter_dirs [@@DISALLOW, pattern]
+    @filters[:dirs].disallow pattern
   end
 
   def ignored_files=(pattern)
-    filter_files [@@DISALLOW, pattern]
+    @filters[:files].disallow pattern
   end
 
-  # New Filter mod
-  def disallow(pattern)
-    @filter_pattern << [@@DISALLOW, pattern]
-  end
-
-  def allow(pattern)
-    @filter_pattern << [@@ALLOW, pattern]
+  # New Filter mode
+  def filter(type, &block)
+    @filters[type].instance_eval &block
   end
 
   def filter_files(&block)
-    @filter_pattern = @filter_files_pattern
-    self.instance_eval &block
+    filter :files, &block
   end
 
   def filter_dirs(&block)
-    @filter_pattern = @filter_dirs_pattern
-    self.instance_eval &block
-  end
-
-  # do the action every @frequency second, to avoid check too frequently
-  attr_accessor :frequency
-
-  def initialize(project_dir = '.')
-    @notifier    = INotify::Notifier.new
-    @project_dir = project_dir
-
-    @events      = []
-    @ignores     = []
-    @frequency   = 0.2
-
-    @filter_files_pattern = []
-    @filter_dirs_pattern = []
-  end
-
-  def ignored?(path, patterns)
-    status = @@ALLOW
-    for mode, pattern in patterns
-      if path =~ pattern
-        status = mode
-      end
-    end
-    return status == @@DISALLOW
+    filter :dirs, &block
   end
 
   def ignored_dir?(path)
-    ignored? path, @filter_dirs_pattern
+    @filters[:dirs].ignored? path
   end
-
 
   def ignored_file?(path)
-    ignored? path, @filter_files_pattern
+    @filters[:files].ignored? path
   end
 
-  # TODO combine events maybe it's not nesscary
-  # moved_from + moved_to = rename
-  # create + delete       = delete
-  # delete + create       = modify
-  # rename + delete       = delete
   def push_event event
     @events << event
   end
@@ -111,22 +109,23 @@ class FileMonitor
       # + created or moved_to
       # - deleted or moved_from
       # # modified
+      # 'stop watching' ignored
       info = ''
-      if flags.include? :moved_from
+      flag = flags[0]
+      flag = :moved_from if flags.include? :moved_from
+      flag = :moved_to   if flags.include? :moved_to
+
+      case flag
+      when :moved_from, :delete
         info += '-'
-      elsif flags.include? :moved_to
+      when :moved_to, :create
         info += '+'
+      when :modify
+        info += '#'
+      when :ignored
+        info += 'stop watching'
       else
-        case flags[0]
-        when :create
-          info += '+'
-        when :modify
-          info += '#'
-        when :delete
-          info += '-'
-        when :ignored
-          info += 'stop watching'
-        end
+        info += 'unknown ' + flags.to_s
       end
 
       if ignored_file?(event.absolute_name)

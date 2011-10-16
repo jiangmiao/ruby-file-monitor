@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name        = 'file-monitor'
   s.summary     = 'File Monitor Library'
   s.description = 'Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed.'
-  s.version     = '0.1.0'
+  s.version     = '0.1.1'
   s.author      = 'JiangMiao'
   s.email       = 'jiangfriend@gmail.com'
   s.homepage    = 'https://github.com/jiangmiao/ruby-file-monitor'
@@ -13,9 +13,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rb-inotify', '>= 0.8.8')
   
   s.files = [
+    'bin/ruby-file-monitor.rb',
     'lib/file-monitor.rb', 
     'examples/use-block.rb', 
     'examples/use-inherit.rb', 
+    'examples/use-filter.rb',
     'examples/f5.rb',
     'README.md'
   ]

@@ -94,6 +94,30 @@ Usage
 
 If block exists, the check method will be ignored.
 
+### Filter mode
+
+    #!/usr/bin/env ruby
+    # coding: utf-8
+    # File: examples/use-filter.rb
+
+    require 'file-monitor.rb'
+
+    m = FileMonitor.new('.')
+    m.filter_dirs {
+      disallow /\.git|\.svn/
+    }
+
+    # record .rb files only
+    m.filter_files {
+      disallow  /.*/
+      allow /\.rb$/
+    }
+      
+    m.run do|events|
+      puts events.size()
+      puts "do something"
+    end
+
 Examples
 --------
 ### Auto F5

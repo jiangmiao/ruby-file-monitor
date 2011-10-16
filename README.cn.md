@@ -96,6 +96,30 @@ Linux Kernel >= 2.6.13
 
 如果block存在, 那么check方法将会被忽略
 
+### Filter mode
+
+    #!/usr/bin/env ruby
+    # coding: utf-8
+    # File: examples/use-filter.rb
+
+    require 'file-monitor.rb'
+
+    m = FileMonitor.new('.')
+    m.filter_dirs {
+      disallow /\.git|\.svn/
+    }
+
+    # record .rb files only
+    m.filter_files {
+      disallow  /.*/
+      allow /\.rb$/
+    }
+      
+    m.run do|events|
+      puts events.size()
+      puts "do something"
+    end
+
 例子
 ----
 ### 自动刷新浏览器 Auto F5

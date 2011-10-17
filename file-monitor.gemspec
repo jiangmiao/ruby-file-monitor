@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
   s.author      = 'JiangMiao'
   s.email       = 'jiangfriend@gmail.com'
   s.homepage    = 'https://github.com/jiangmiao/ruby-file-monitor'
+  s.has_rdoc    = false
   s.rubyforge_project = 'file-monitor'
   s.required_ruby_version = '>= 1.8.7'
   s.add_dependency('rb-inotify', '>= 0.8.8')
@@ -16,6 +17,7 @@ Gem::Specification.new do |s|
     'examples/use-block.rb', 
     'examples/use-inherit.rb', 
     'examples/use-filter.rb',
+    'examples/use-creator.rb',
     'examples/f5.rb',
     'README.md'
   ]

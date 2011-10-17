@@ -46,6 +46,7 @@ Usage
 -----
 
     require 'rubygems'
+    require 'file-monitor'
 
     # watch current working directory
     FileMonitor.watch '.' do

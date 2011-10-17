@@ -50,7 +50,7 @@ Usage
     # watch current working directory
     FileMonitor.watch '.' do
 
-      # do not watch directory contains git and svn
+      # do not watch directory end with git or svn
       # the last charactor '/' has been trimmed already
       dirs {
         disallow /git$|svn$/

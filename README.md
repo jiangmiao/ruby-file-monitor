@@ -1,7 +1,7 @@
 Ruby File Monitor
 =================
 
-Ruby File Monitor is a easy way to watch the directories and files, do anything when them changed. Use for situation like Auto refresh webpage, Auto execute unit tests, Auto compile CoffeeScript, Haml and so on. It's base on [rb-inotify](https://github.com/nex3/rb-inotify), So it only works in inotify supported system such as Linux.
+Ruby File Monitor is a easy way to watch the directories and files, execute commands when them changed. Use for situation like Auto refresh webpage, Auto execute unit tests, Auto compile CoffeeScript, Haml and so on. It's base on [rb-inotify](https://github.com/nex3/rb-inotify), So it only works in inotify supported system such as Linux.
 
 Requirements
 ------------
@@ -36,7 +36,7 @@ Install from source
     git clone https://github.com/jiangmiao/ruby-file-monitor
     cd ruby-file-monitor
     gem build file-monitor.gemspec
-    gem install file-monitor-0.1.0.gem --user-install
+    gem install --local --user-install file-monitor-0.1.3.gem 
 
 Install from gem server
 
@@ -45,14 +45,31 @@ Install from gem server
 Usage
 -----
 
+    #!/usr/bin/env ruby
+    # coding: utf-8
+    # File: examples/use-creator.rb
+
     require 'rubygems'
+
+    lib_dir = File.join File.dirname(__FILE__), '../lib'
+    $:.unshift lib_dir unless $:.include? lib_dir
+
     require 'file-monitor'
 
-    # watch current working directory
-    FileMonitor.watch '.' do
+    dir = ARGV[0] || '.'
 
-      # do not watch directory end with git or svn
-      # the last charactor '/' has been trimmed already
+    # watch current working directory
+    FileMonitor.watch dir do
+
+      # set frequency 0.2 second (optional default is 0.2)
+      # frequency 0.2
+
+      # do not follow the symlink (optional default is false)
+      # follow_symlink false
+
+
+      # do not watch directory contains git and svn
+      # the last charactor '/' has been trimmed
       dirs {
         disallow /git$|svn$/
       }
@@ -60,7 +77,7 @@ Usage
       # record ruby files only
       # it equals files /\.rb$/
       files {
-        disallow //
+        disallow /.*/
         allow /\.rb$/
       }
 
@@ -70,7 +87,6 @@ Usage
         puts events.size()
         puts "do something"
       }
-
     end
 
 Examples

@@ -59,6 +59,7 @@ EOT
 
     f5 = self
     set :logging, false
+    enable :run
     get '/f5_status' do
       (f5.updated_at*1000).to_s
     end

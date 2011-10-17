@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # coding: utf-8
-# File: examples/use-filter.rb
+# File: examples/use-creator.rb
 
 require 'rubygems'
 
@@ -9,8 +9,17 @@ $:.unshift lib_dir unless $:.include? lib_dir
 
 require 'file-monitor'
 
+dir = ARGV[0] || '.'
+
 # watch current working directory
-FileMonitor.watch '.' do
+FileMonitor.watch dir do
+
+  # set frequency 0.2 second (optional default is 0.2)
+  # frequency 0.2
+
+  # do not follow the symlink (optional default is false)
+  # follow_symlink false
+
 
   # do not watch directory contains git and svn
   # the last charactor '/' has been trimmed

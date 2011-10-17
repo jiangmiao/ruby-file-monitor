@@ -17,6 +17,7 @@ class MyFileMonitor < FileMonitor
 end
 
 dir = ARGV[0] || '.'
+
 m = MyFileMonitor.new(dir)
 # ignore any dirs end with .git on .svn
 # The alias of m.filter_dirs {

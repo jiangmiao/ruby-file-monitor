@@ -9,7 +9,9 @@ $:.unshift lib_dir unless $:.include? lib_dir
 
 require 'file-monitor.rb'
 
-m = FileMonitor.new('.')
+dir = ARGV[0] || '.'
+
+m = FileMonitor.new(dir)
 m.filter_dirs {
   disallow /\.git|\.svn/
 }

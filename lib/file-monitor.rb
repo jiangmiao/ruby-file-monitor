@@ -2,6 +2,7 @@
 # coding: utf-8
 
 require 'rb-inotify'
+require 'stringio'
 
 class FileMonitorFilter
   def initialize
@@ -32,6 +33,14 @@ class FileMonitorFilter
     @patterns = []
   end
 
+  def to_s
+    str = StringIO.new
+    for pattern in @patterns
+      str.puts "#{pattern[0].to_s} #{pattern[1].inspect}"
+    end
+    str.string
+  end
+
   alias_method :d, :disallow
   alias_method :a, :allow
 end
@@ -49,17 +58,24 @@ class FileMonitor
     @frequency
   end
 
-  def set_frequency(frequency)
-    @frequency = frequency
+  # options
+  def follow_symlink=(follow_symlink)
+    @follow_symlink = follow_symlink
+  end
+
+  def follow_symlink(*args)
+    @follow_symlink = args[0] if args.size()
+    @follow_symlink
   end
 
   def initialize(project_dir = '.')
     @notifier    = INotify::Notifier.new
     @project_dir = project_dir
 
-    @events      = []
-    @ignores     = []
-    @frequency   = 0.2
+    @events         = []
+    @ignores        = []
+    @frequency      = 0.2
+    @follow_symlink = false
 
     @filters = {
       :files => FileMonitorFilter.new,
@@ -133,10 +149,15 @@ class FileMonitor
     end
     path
   end
+
   
   # Watch a directory
   def watch(dir)
     dir = trim_dir(dir)
+    if !@follow_symlink and File.symlink? dir
+      puts "ignore symlink directory #{dir}"
+      return false
+    end
     if ignored_dir?(dir)
       puts "ignore #{dir}"
       return false
@@ -170,7 +191,9 @@ class FileMonitor
         info += 'unknown ' + flags.to_s
       end
 
-      if ignored_file?(event.absolute_name)
+      is_dir = flags.include?(:isdir)
+      if is_dir and ignored_dir?(event.absolute_name) or 
+        !is_dir and ignored_file?(event.absolute_name)
         # the ignored info will not put currently
         info += "i #{event.absolute_name}"
         next

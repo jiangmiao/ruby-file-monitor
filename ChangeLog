@@ -1,3 +1,11 @@
+2011-10-18: Version 0.1.3
+
+        Fixed won't watch new directory automatically
+
+        New option follow_symlink
+
+        Copy f5.rb to bindir
+
 2011-10-17: Version 0.1.2
 
         Add static creator

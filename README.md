@@ -17,19 +17,15 @@ Features
 
     If make a new directory in the watched directory, the new directory will be watched automatically.
 
-2. Support Ignore Dirs: 
+2. Support Filter:
 
-    Any directory matched Regexp pattern ignored_dirs will not be watched.
-
-3. Support Ignore Files:
-
-    Any files matched Regexp pattern ignored_files will not be recorded.
-
-4. Events Buffer Mechanism:
+    Support filter directories or files.
+ 
+3. Events Buffer Mechanism:
 
     To avoid run the check methods too quickly, for example, when delete 20 files at the same time, if without Events Buffer will run the check methods 20 times. the frequency of file-monitor is 0.2 second
 
-5. High Performance
+4. High Performance
 
     For Ruby File Monitor use inotify library, so it's very fast, even watching thousands of directories.
 
@@ -48,92 +44,32 @@ Install from gem server
 
 Usage
 -----
-### Using block
 
-    #!/usr/bin/env ruby
-    # coding: utf-8
-    # File: examples/use-block.rb
+    require 'rubygems'
 
-    require 'file-monitor'
-
-    dir = ARGV[0] || '.'
-    m = FileMonitor.new(dir)
-
-    # ignore any dirs contains .git on .svn
-    m.ignored_dirs = /\.git|\.svn/
-
-    # ignore any files contains .swp or ~
-    m.ignored_files = /\.swp|~/
-
-    # the block's events contains all file modified infomation in last 0.2 second
-    m.run do|events|
-      puts "#{events.size} events"
-      puts "do something"
-    end
-
-### Using inherit
-
-    #!/usr/bin/env ruby
-    # coding: utf-8
-    # File: examples/use-inherit.rb
-
-    require 'file-monitor'
-
-    class MyFileMonitor < FileMonitor
-      def check(events)
-        puts "#{events.size} events"
-        puts "do something"
-      end
-    end
-
-    dir = ARGV[0] || '.'
-    m = MyFileMonitor.new(dir)
-    m.ignored_dirs = /\.git|\.svn/
-    m.ignored_files = /\.swp|~/
-    m.run
-
-If block exists, the check method will be ignored.
-
-### Using filter mode
-
-    #!/usr/bin/env ruby
-    # coding: utf-8
-    # File: examples/use-filter.rb
-
-    require 'file-monitor.rb'
-
-    m = FileMonitor.new('.')
-    m.filter_dirs {
-      disallow /\.git|\.svn/
-    }
-
-    # record .rb files only
-    m.filter_files {
-      disallow  /.*/
-      allow /\.rb$/
-    }
-      
-    m.run do|events|
-      puts events.size()
-      puts "do something"
-    end
-
-### The easiest way
-
+    # watch current working directory
     FileMonitor.watch '.' do
+
+      # do not watch directory contains git and svn
+      # the last charactor '/' has been trimmed already
       dirs {
-        disallow /git|svn/
+        disallow /git$|svn$/
       }
 
+      # record ruby files only
+      # it equals files /\.rb$/
       files {
-        disallow /.*/
-        allow /.rb$/
+        disallow //
+        allow /\.rb$/
       }
 
+      # The commands will be runned when file changed
+      # the events contains all file modified infomation in last 0.2 second
       exec {|events|
         puts events.size()
         puts "do something"
       }
+
     end
 
 Examples
@@ -172,9 +108,9 @@ f5.rb requires sinatra.
 
     $ ruby examples/use-block.rb 
     watching .
-    watching ./lib/
-    ignore ./.git/
-    watching ./examples/
+    watching ./lib
+    ignore ./.git
+    watching ./examples
 
 Edit and save README.md by gvim, examples/use-block outputs
 

@@ -31,11 +31,27 @@ class FileMonitorFilter
   def reset
     @patterns = []
   end
+
+  alias_method :d, :disallow
+  alias_method :a, :allow
 end
 
 class FileMonitor
   # do the action every @frequency second, to avoid check too frequently
-  attr_accessor :frequency
+  def frequency=(frequency)
+    @frequency = frequency
+  end
+
+  def frequency(*args)
+    if args.size()
+      @frequency = args[0]
+    end
+    @frequency
+  end
+
+  def set_frequency(frequency)
+    @frequency = frequency
+  end
 
   def initialize(project_dir = '.')
     @notifier    = INotify::Notifier.new
@@ -69,19 +85,37 @@ class FileMonitor
   end
 
   # New Filter mode
-  def filter(type, &block)
-    @filters[type].instance_eval &block
+  def filter(type, args = [], &block)
+    @filters[type].reset()
+    if block_given?
+      if args.size() > 0
+        $stderr.puts "filter's params #{args.to_s} has been ignored for the block is given"
+      end
+      @filters[type].instance_eval &block
+    elsif args.size()
+      @filters[type].instance_eval do
+        disallow //
+        for arg in args
+          allow arg
+        end
+      end
+    else
+      raise 'filter needs params or block'
+    end
   end
 
-  def filter_files(&block)
-    filter :files, &block
+  def filter_files(*args, &block)
+    filter :files, args, &block
   end
 
-  def filter_dirs(&block)
-    filter :dirs, &block
+  def filter_dirs(*args, &block)
+    filter :dirs, args, &block
   end
 
   def ignored_dir?(path)
+    if path == '.'
+      return false
+    end
     @filters[:dirs].ignored? path
   end
 
@@ -92,9 +126,17 @@ class FileMonitor
   def push_event event
     @events << event
   end
+
+  def trim_dir(path)
+    if path =~ /(.*)\/$/
+      path = $1
+    end
+    path
+  end
   
   # Watch a directory
   def watch(dir)
+    dir = trim_dir(dir)
     if ignored_dir?(dir)
       puts "ignore #{dir}"
       return false

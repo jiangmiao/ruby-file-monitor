@@ -19,9 +19,15 @@ end
 dir = ARGV[0] || '.'
 m = MyFileMonitor.new(dir)
 # ignore any dirs end with .git on .svn
-m.ignored_dirs = /\.git|\.svn/
+# The alias of m.filter_dirs {
+#   disallow /\.git|\.svn/
+# }
+m.ignore_dirs /\.git|\.svn/
 
 # ignore any files end with .swp or ~
-m.ignored_files = /\.swp|~/
+# The alias of m.filter_files {
+#   disallow /\.swp|~/
+# }
+m.ignore_files /\.swp|~/
 
 m.run

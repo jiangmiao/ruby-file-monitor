@@ -69,7 +69,7 @@ Usage
 
 
       # do not watch directory contains git and svn
-      # the last charactor '/' has been trimmed
+      # the last character '/' has been trimmed
       dirs {
         disallow /git$|svn$/
       }

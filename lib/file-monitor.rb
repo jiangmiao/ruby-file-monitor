@@ -153,16 +153,19 @@ class FileMonitor
   
   # Watch a directory
   def watch(dir)
-    dir = trim_dir(dir)
-    if !@follow_symlink and File.symlink? dir
-      puts "ignore symlink directory #{dir}"
-      return false
-    end
-    if ignored_dir?(dir)
-      puts "ignore #{dir}"
-      return false
-    else
-      puts "watching #{dir}"
+    # always allow watching @project_dir
+    if dir != @project_dir
+      dir = trim_dir(dir)
+      if !@follow_symlink and File.symlink? dir
+        puts "ignore symlink directory #{dir}"
+        return false
+      end
+      if ignored_dir?(dir)
+        puts "ignore #{dir}"
+        return false
+      else
+        puts "watching #{dir}"
+      end
     end
 
     @notifier.watch dir, :modify, :create, :move, :delete, :onlydir do|event|

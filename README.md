@@ -89,6 +89,24 @@ Usage
       }
     end
 
+#### Simple
+
+    #!/usr/bin/env ruby
+    # coding: utf-8
+    # File: examples/simple.rb
+    require 'rubygems'
+    require 'file-monitor'
+
+    FileMonitor.watch '.' do
+        # missing 'dirs' file-monitor will watch all sub directories
+
+        # only record ruby file
+        files /\.rb$/
+        exec {
+            system('rake test')
+        }
+    end
+
 Examples
 --------
 ### Auto F5
@@ -138,3 +156,22 @@ Edit and save README.md by gvim, examples/use-block outputs
     #  ./README.md
     5 events
     do something
+
+### File Monitor Cli
+
+    $ watch.rb
+
+    Usage: watch.rb [options] [directory]
+
+      -d, --dir     the directory regexp to watch
+      -e, --exec    the command will be execuate
+      -f, --file    the file regexp to watch
+      -h, --help    display this help message
+
+    Example:
+
+      Watch current working dir and  sub directory lib and src, 
+      if any ruby file(match \.rb$) changes
+      then execute 'ls' command
+
+        watch.rb -d 'lib$' -d 'src$' -f '\.rb$' -e 'ls'
